@@ -59,13 +59,10 @@ uppercase_data = UppercaseData(args.window, args.alphabet_size)
 
 
 hyper = {
-    "l2": 0.001,  # 0, 0.001, 0.0001, 0.00001,
     "dropout": 0.2,
-    "ls": 0.001,
-    "samples": 1000
+    "ls": 0.1,
+    "samples": 1000000
 }
-
-reg = tf.keras.regularizers.L1L2(0, hyper["l2"])
 
 # # Create the model
 model = tf.keras.Sequential()
@@ -74,7 +71,7 @@ model.add(tf.keras.layers.Lambda(lambda x: tf.one_hot(x, len(uppercase_data.trai
 model.add(tf.keras.layers.Flatten())
 model.add(tf.keras.layers.Dropout(hyper["dropout"]))
 for hidden_layer in args.hidden_layers:
-    model.add(tf.keras.layers.Dense(hidden_layer, activation=tf.nn.relu, kernel_regularizer=reg, bias_regularizer=reg))
+    model.add(tf.keras.layers.Dense(hidden_layer, activation=tf.nn.relu))
     model.add(tf.keras.layers.Dropout(hyper["dropout"]))
 model.add(tf.keras.layers.Dense(2, activation="sigmoid"))
 

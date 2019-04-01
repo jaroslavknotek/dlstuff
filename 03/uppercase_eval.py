@@ -7,17 +7,21 @@ parser.add_argument("gold", type=str, help="Path to gold data.")
 args = parser.parse_args()
 
 with open(args.system, "r", encoding="utf-8-sig") as system_file:
-    system = system_file.read()
+    system = list(system_file.read())
 
 with open(args.gold, "r", encoding="utf-8-sig") as gold_file:
-    gold = gold_file.read()
+    gold = list(gold_file.read())
 
 same = 0
 for i in range(len(gold)):
     if system[i].lower() != gold[i].lower():
+        #system[i] = gold[i]
         raise RuntimeError("The system output and gold data differ on position {}: '{}' vs '{}'.".format(
             i, system[i:i+20].lower(), gold[i:i+20].lower()))
 
     same += gold[i] == system[i]
+
+with open("corrected.txt", "w", encoding="utf-8-sig") as c:
+    c.write("".join(system))
 
 print("{:.2f}".format(100 * same / len(gold)))
